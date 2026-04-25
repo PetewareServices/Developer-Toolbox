@@ -31,7 +31,7 @@ local Settings = ... or {
     ["Theme"] = {}
 }
 
-local repo_owner = Settings["Branch"]
+local repo_owner = Settings["Owner"]
 local build = Settings["Build"]
 local theme = Settings["Theme"]
 
