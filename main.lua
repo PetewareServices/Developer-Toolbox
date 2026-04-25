@@ -28,7 +28,7 @@ end
 local Settings = ... or {
     ["Owner"] = "Unknown",
     ["Build"] = "Roblox",
-    ["Theme"] = {}
+    ["Theme"] = "Default"
 }
 
 local repo_owner = Settings["Owner"]
@@ -223,8 +223,36 @@ if MainState.Supported == nil then
         ["loadstring"] = type(loadstring) == "function" and loadstring or "nil"
     }
 
+    local core_access, core_gui_object = pcall(function()
+        return cloneref(game:GetService("CoreGui"))
+    end)
+
+    if not core_access or typeof(core_gui_object) ~= "Instance" then
+        local error_sound = InstanceNew("Sound")
+        error_sound.Name = "PetewareErrorNotification"
+        error_sound.SoundId = "rbxassetid://9066167010"
+        error_sound.Volume = 1
+        error_sound.Archivable = false
+        error_sound.Parent = sound_service
+
+        error_sound:Play()
+        error_sound.Ended:Once(function()
+            error_sound:Destroy()
+        end)
+
+        GetService(game, "StarterGui"):SetCore("SendNotification", {
+            Title = "Developer Toolbox",
+            Text = "Incompatible Exploit. Your exploit does not support the developer toolbox (missing " .. tostring(func_name) .. ")",
+            Icon = bell_ring,
+            Duration = duration or 3.5
+        })
+
+        MainState.Supported = false
+        return
+    end
+
     for func_name, func in pairs(required_functions) do
-        if not func or type(func) ~= "function" then
+        if type(func) ~= "function" then
             local error_sound = InstanceNew("Sound")
             error_sound.Name = "PetewareErrorNotification"
             error_sound.SoundId = "rbxassetid://9066167010"
@@ -877,7 +905,7 @@ local function FetchExecutorInfo()
 end
 
 --// Main UI
-local WizardLibrary = CachedData["Wizard"]()
+local WizardLibrary = CachedData["Wizard"](theme)
 
 local LibraryObject = WizardLibrary.Object
 
