@@ -37,7 +37,7 @@ This project is fully open source, allowing anyone to access, modify, and contri
 Paste this script into your Roblox executor and execute
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/PetewareServices/Developer-Toolbox/refs/heads/main/main.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/PetewareServices/Developer-Toolbox/refs/heads/main/main.lua"))({["Owner"] = "PetewareServices"})
 ```
 
 ---
