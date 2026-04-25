@@ -4,14 +4,17 @@
     Note: Because the original owner is such a dick and decided obfuscate a UI library, I refuse to give him credits because he made us go through this misery.
 ]]
 
---// Build Detection
-local build = ... or "roblox"
-
 --// Loading Handler
 if not game:IsLoaded() then
     game.Loaded:Wait()
     task.wait()
 end
+
+--// Settings Detection
+local Settings = type(...) == "table" and ... or {
+    ["Build"] = "Roblox",
+    ["Theme"] = "Default"
+}
 
 --// Local References
 local game = game
