@@ -24,6 +24,17 @@ if not game:IsLoaded() then
     task.wait()
 end
 
+--// Settings Detection
+local Settings = ... or {
+    ["Owner"] = "Unknown",
+    ["Build"] = "Roblox",
+    ["Theme"] = {}
+}
+
+local repo_owner = Settings["Branch"]
+local build = Settings["Build"]
+local theme = Settings["Theme"]
+
 --// Local References
 local game = game
 local PlaceId = game.PlaceId
@@ -40,6 +51,7 @@ local taskdelay = task.delay
 local table = table
 local tablefind = table.find
 local tableconcat = table.concat
+local tablecreate = table.create
 local os = os
 local osclock = os.clock
 local osdate = os.date
@@ -251,7 +263,7 @@ local bell_ring_png = images_folder .. "/bell-ring.png"
 local bell_ring_mp3 = audios_folder .. "/bell-ring.mp3"
 
 --// Data Loader
-local toolbox_directory = "https://raw.githubusercontent.com/PetewareServices/Developer-Toolbox/refs/heads/main/"
+local toolbox_directory = "https://raw.githubusercontent.com/" .. repo_owner .. "/Developer-Toolbox/refs/heads/main/"
 local backups_directory = toolbox_directory .. "Backups/"
 local assets_directory = toolbox_directory .. "Assets/"
 local audios_directory = assets_directory .. "Audios/"
@@ -433,6 +445,7 @@ notification_sound.Archivable = false
 notification_sound.Loaded:Wait()
 
 local notification_sounds = true
+local bell_ring_asset = (customasset and bell_ring_png and customasset(bell_ring_png)) or "rbxassetid://108052242103510"
 
 local function Notify(text, duration)
     if notification_sound and notification_sounds then
@@ -442,7 +455,7 @@ local function Notify(text, duration)
     starter_gui:SetCore("SendNotification", {
         Title = "Developer Toolbox",
         Text = text or "Text Content not specified.",
-        Icon = (customasset and bell_ring_png and customasset(bell_ring_png)) or "rbxassetid://108052242103510",
+        Icon = bell_ring_asset,
         Duration = duration or 3.5
     })
 end
@@ -484,7 +497,7 @@ local function InteractiveNotify(options, yield)
     starter_gui:SetCore("SendNotification", {
         Title = "Developer Toolbox",
         Text = text,
-        Icon = bell_ring_png,
+        Icon = bell_ring_asset,
         Duration = duration,
         Button1 = button1,
         Button2 = button2,
@@ -650,7 +663,7 @@ if queueteleport and type(queueteleport) == "function" and execute_on_teleport a
     MainState.QueueOnTeleport = true
     player.OnTeleport:Connect(function(state)
         if tablefind(valid_teleport_states, state) and MainState.QueueOnTeleport and queueteleport then
-            queueteleport('loadstring(HttpGet(game, "https://raw.githubusercontent.com/PetewareServices/Developer-Toolbox/refs/heads/main/main.lua"))()')
+            queueteleport('loadstring(game:HttpGet("' .. toolbox_directory .. '/main.lua"))()')
         end
     end)
 elseif not queueteleport or type(queueteleport) ~= "function" then
@@ -708,14 +721,12 @@ local addon_dropdown
 
 local function FetchAddonList()
     local files = listfiles(addons_folder)
-    local list = {}
+    local list = tablecreate(#files)
 
     for _, path in pairs(files) do
-        if stringsub(path, -4) == ".lua" then
-            local filename = stringmatch(path, "[^/\\]+$") or path 
-            filename = stringgsub(filename, "%.lua$", "")
-            list[#list + 1] = filename
-        end
+        local filename = stringmatch(path, "[^/\\]+$") or path 
+        filename = stringgsub(filename, "%.lua$", "")
+        list[#list + 1] = filename
     end
 
     return list
@@ -898,7 +909,6 @@ Tools:CreateButton("Dex Explorer", function()
     CachedData.DexExplorer()
 end)
 
-local repo_owner = "PetewareServices"
 local repo_branch = "revision"
 
 local function WebImport(file)
@@ -916,7 +926,7 @@ end)
 
 Tools:CreateButton("Ketamine", function()
     if type(CachedData.Ketamine) ~= "function" then
-        CachedData.Ketamine = loadstring(HttpGet(game, "https://raw.githubusercontent.com/PetewareServices/Developer-Toolbox/refs/heads/main/Backups/Ketamine-Backup.lua"))
+        CachedData.Ketamine = loadstring(HttpGet(game, backups_directory .. "Ketamine-Backup.lua"))
     end
     
     CachedData.Ketamine()
@@ -1102,7 +1112,7 @@ Other:CreateButton("FPS Booster", function()
     end
 
     if type(CachedData.FPSBooster) ~= "function" then
-        CachedData.FPSBooster = loadstring(HttpGet(game, "https://raw.githubusercontent.com/PetewareServices/Developer-Toolbox/refs/heads/main/Backups/FPS-Booster-Backup.lua"))
+        CachedData.FPSBooster = loadstring(HttpGet(game, backups_directory .. "FPS-Booster-Backup.lua"))
     end
 
     CachedData.FPSBooster()
