@@ -24,26 +24,32 @@ if not game:IsLoaded() then
     task.wait()
 end
 
+--// Early Local References
+local Color3fromRGB = Color3.fromRGB
+
+local default_theme = {
+    WindowBg = Color3fromRGB(25, 25, 25), 
+    TopBar = Color3fromRGB(25, 25, 25),
+    Background = Color3fromRGB(35, 35, 35),
+    SectionHeader = Color3fromRGB(45, 45, 45),
+    SectionBg = Color3fromRGB(35, 35, 35),
+    Button = Color3fromRGB(65, 65, 65),
+    ToggleBar = Color3fromRGB(65, 65, 65),
+    Toggle = Color3fromRGB(255, 87, 87),
+    Text = Color3fromRGB(255, 255, 255)
+}
+
 --// Settings Detection
 local raw_args = ...
 
 local Settings = raw_args and type(raw_args) == "table" and raw_args or {
+    ["Owner"] = "Unknown",
     ["Build"] = "Roblox",
     ["Theme"] = "Default",
-    ["Colors"] = {
-        WindowBg = Color3.fromRGB(18, 18, 18),
-        TopBar = Color3.fromRGB(18, 18, 18),
-        Background = Color3.fromRGB(18, 18, 18),
-        SectionHeader = Color3.fromRGB(45, 45, 45),
-        SectionBg = Color3.fromRGB(28, 28, 28),
-        Button = Color3.fromRGB(28, 28, 28),
-        ToggleBar = Color3.fromRGB(22, 22, 22),
-        Toggle = Color3.fromRGB(255, 140, 0),
-        Text  = Color3.fromRGB(235, 235, 235),
-    }
+    ["Colors"] = default_theme
 }
 
-local Theme = Settings["Colors"]
+local Theme = Settings["Colors"] or default_theme
 
 --// Local References
 local game = game
@@ -54,8 +60,6 @@ local UDim = UDim
 local UDim2New = UDim2.new
 local Vector2 = Vector2
 local Vector2New = Vector2.new
-local Color3 = Color3
-local Color3New = Color3.new
 local Rect = Rect
 local RectNew = Rect.new
 local task = task
