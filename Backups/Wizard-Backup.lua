@@ -1,6 +1,6 @@
 --[[
     This UI Library is a improved modified version of the Wizard Library specifically designed for the Developer Toolbox
-    Credits: Jake aka jake3232_ on discord for deobfuscating the UI Library, Petah aka 584h on discord for Restoring and Improving the Source Code
+    Credits: Jake aka jake3232_ on discord for deobfuscating the UI Library and the Peteware Development Team for doing everything else.
     Note: Because the original owner is such a dick and decided obfuscate a UI library, I refuse to give him credits because he made us go through this misery.
 ]]
 
@@ -11,10 +11,23 @@ if not game:IsLoaded() then
 end
 
 --// Settings Detection
-local Settings = type(...) == "table" and ... or {
+local Settings = ... and type(...) == "table" and ... or {
     ["Build"] = "Roblox",
-    ["Theme"] = "Default"
+    ["Theme"] = "Default",
+    ["Colors"] = {
+        WindowBg = Color3.fromRGB(18, 18, 18),
+        TopBar = Color3.fromRGB(18, 18, 18),
+        Background = Color3.fromRGB(18, 18, 18),
+        SectionHeader = Color3.fromRGB(45, 45, 45),
+        SectionBg = Color3.fromRGB(28, 28, 28),
+        Button = Color3.fromRGB(28, 28, 28),
+        ToggleBar = Color3.fromRGB(22, 22, 22),
+        Toggle = Color3.fromRGB(255, 140, 0),
+        Text  = Color3.fromRGB(235, 235, 235),
+    }
 }
+
+local Theme = Settings["Colors"]
 
 --// Local References
 local game = game
@@ -162,7 +175,7 @@ return {
 
         window_image_label.Name = stringgsub(window_name, " ", "") .. "Window"
         window_image_label.Parent = main_frame
-        window_image_label.BackgroundColor3 = Color3New(0.0980392, 0.0980392, 0.0980392)
+        window_image_label.BackgroundColor3 = Theme.WindowBg or Color3New(0.0980392, 0.0980392, 0.0980392)
         window_image_label.BackgroundTransparency = 0
         window_image_label.Position = UDim2New(window_x_offset, -100, 3, -265)
         window_image_label.Size = UDim2New(0, 170, 0, 30)
@@ -244,7 +257,7 @@ return {
 
         window_secondary_frame.Name = "BottomRoundCover"
         window_secondary_frame.Parent = window_top_bar
-        window_secondary_frame.BackgroundColor3 = Color3New(0.0980392, 0.0980392, 0.0980392)
+        window_secondary_frame.BackgroundColor3 = Theme.TopBar or Color3New(0.0980392, 0.0980392, 0.0980392)
         window_secondary_frame.BorderSizePixel = 0
         window_secondary_frame.Position = UDim2New(0, 0, 0.833333313, 0)
         window_secondary_frame.Size = UDim2New(0, 170, 0, 5)
@@ -252,7 +265,7 @@ return {
 
         window_title_secondary.Name = "Body"
         window_title_secondary.Parent = window_image_label
-        window_title_secondary.BackgroundColor3 = Color3New(0.137255, 0.137255, 0.137255)
+        window_title_secondary.BackgroundColor3 = Theme.Background or Color3New(0.137255, 0.137255, 0.137255)
         window_title_secondary.BackgroundTransparency = 0
         window_title_secondary.ClipsDescendants = true
         window_title_secondary.Size = UDim2New(0, 170, 0, window_size)
@@ -301,7 +314,7 @@ return {
 
                 section_main_frame.Name = stringgsub(section_name, " ", "") .. "Section"
                 section_main_frame.Parent = window_title_secondary
-                section_main_frame.BackgroundColor3 = Color3New(0.176471, 0.176471, 0.176471)
+                section_main_frame.BackgroundColor3 = Theme.SectionHeader or Color3New(0.176471, 0.176471, 0.176471)
                 section_main_frame.BorderSizePixel = 0
                 section_main_frame.ClipsDescendants = true
                 section_main_frame.Size = UDim2New(0, 170, 0, section_size)
@@ -430,7 +443,7 @@ return {
 
                         toggle_main_frame.Name = stringgsub(toggle_name, " ", "") .. "ToggleHolder"
                         toggle_main_frame.Parent = section_main_frame
-                        toggle_main_frame.BackgroundColor3 = Color3New(0.137255, 0.137255, 0.137255)
+                        toggle_main_frame.BackgroundColor3 = Theme.SectionBg or Color3New(0.137255, 0.137255, 0.137255)
                         toggle_main_frame.BorderSizePixel = 0
                         toggle_main_frame.Size = UDim2New(0, 170, 0, 30)
 
@@ -449,7 +462,7 @@ return {
 
                         toggle_background.Name = "ToggleBackground"
                         toggle_background.Parent = toggle_main_frame
-                        toggle_background.BackgroundColor3 = Color3New(0.254902, 0.254902, 0.254902)
+                        toggle_background.BackgroundColor3 = Theme.ToggleBar or Color3New(0.254902, 0.254902, 0.254902)
                         toggle_background.BorderSizePixel = 0
                         toggle_background.Position = UDim2New(0.847058833, 0, 0.166666672, 0)
                         toggle_background.Size = UDim2New(0, 20, 0, 20)
@@ -460,7 +473,7 @@ return {
 
                         toggle_button.Name = "ToggleButton"
                         toggle_button.Parent = toggle_background
-                        toggle_button.BackgroundColor3 = Color3New(1, 0.341176, 0.341176)
+                        toggle_button.BackgroundColor3 = Theme.Toggle or Color3New(1, 0.341176, 0.341176)
                         toggle_button.BorderSizePixel = 0
                         toggle_button.Position = UDim2New(0, 2, 0, 2)
                         toggle_button.Size = UDim2New(0, 16, 0, 16)
@@ -551,13 +564,13 @@ return {
 
                         button_main_frame.Name = stringgsub(button_name, " ", "") .. "ButtonHolder"
                         button_main_frame.Parent = section_main_frame
-                        button_main_frame.BackgroundColor3 = Color3New(0.137255, 0.137255, 0.137255)
+                        button_main_frame.BackgroundColor3 = Theme.SectionBg or Color3New(0.137255, 0.137255, 0.137255)
                         button_main_frame.BorderSizePixel = 0
                         button_main_frame.Size = UDim2New(0, 170, 0, 30)
 
                         button_title.Name = "Button"
                         button_title.Parent = button_main_frame
-                        button_title.BackgroundColor3 = Color3New(0.254902, 0.254902, 0.254902)
+                        button_title.BackgroundColor3 = Theme.Button or Color3New(0.254902, 0.254902, 0.254902)
                         button_title.BackgroundTransparency = 0
                         button_title.BorderSizePixel = 0
                         button_title.Position = UDim2New(0.052941177, 0, 0, 0)
@@ -653,12 +666,12 @@ return {
 
                         textbox_main_frame.Name = stringgsub(textbox_name, " ", "") .. "TextBoxHolder"
                         textbox_main_frame.Parent = section_main_frame
-                        textbox_main_frame.BackgroundColor3 = Color3New(0.137255, 0.137255, 0.137255)
+                        textbox_main_frame.BackgroundColor3 = Theme.SectionBg or Color3New(0.137255, 0.137255, 0.137255)
                         textbox_main_frame.BorderSizePixel = 0
                         textbox_main_frame.Size = UDim2New(0, 170, 0, 30)
 
                         textbox_title.Parent = textbox_main_frame
-                        textbox_title.BackgroundColor3 = Color3New(0.254902, 0.254902, 0.254902)
+                        textbox_title.BackgroundColor3 = Theme.Button or Color3New(0.254902, 0.254902, 0.254902)
                         textbox_title.BackgroundTransparency = 0
                         textbox_title.ClipsDescendants = true
                         textbox_title.Position = UDim2New(0.0529999994, 0, 0, 0)
@@ -771,7 +784,7 @@ return {
                   
                         dropdown_main_frame.Name = stringgsub(dropdown_name, " ", "") .. "DropdownHolder"
                         dropdown_main_frame.Parent = section_main_frame
-                        dropdown_main_frame.BackgroundColor3 = Color3New(0.137255, 0.137255, 0.137255)
+                        dropdown_main_frame.BackgroundColor3 = Theme.SectionBg or Color3New(0.137255, 0.137255, 0.137255)
                         dropdown_main_frame.BorderSizePixel = 0
                         dropdown_main_frame.Size = UDim2New(0, 170, 0, 30)
                         dropdown_main_frame.ClipsDescendants = false
@@ -782,7 +795,7 @@ return {
                   
                         dropdown_title.Name = "DropdownTitle"
                         dropdown_title.Parent = dropdown_main_frame
-                        dropdown_title.BackgroundColor3 = Color3New(0.254902, 0.254902, 0.254902)
+                        dropdown_title.BackgroundColor3 = Theme.Button or Color3New(0.254902, 0.254902, 0.254902)
                         dropdown_title.BackgroundTransparency = 0
                         dropdown_title.BorderSizePixel = 0
                         dropdown_title.Position = UDim2New(0.0529999994, 0, 0, 0)
@@ -829,7 +842,7 @@ return {
 
                         dropdown_canvas.Name = "DropdownCanvas_" .. stringgsub(dropdown_name, " ", "")
                         dropdown_canvas.Parent = window_image_label
-                        dropdown_canvas.BackgroundColor3 = Color3New(0.13725490196078433, 0.13725490196078433, 0.13725490196078433)
+                        dropdown_canvas.BackgroundColor3 = Theme.Background or Color3New(0.13725490196078433, 0.13725490196078433, 0.13725490196078433)
                         dropdown_canvas.BackgroundTransparency = 0
                         dropdown_canvas.BorderSizePixel = 0
                         dropdown_canvas.ClipsDescendants = true
@@ -890,7 +903,7 @@ return {
                   
                                 button_element.Name = stringgsub(dropdown_element, " ", "") .. "Button"
                                 button_element.Parent = dropdown_canvas
-                                button_element.BackgroundColor3 = Color3New(0.137255, 0.137255, 0.137255)
+                                button_element.BackgroundColor3 = Theme.SectionBg or Color3New(0.137255, 0.137255, 0.137255)
                                 button_element.BackgroundTransparency = 0
                                 button_element.BorderSizePixel = 0
                                 button_element.Size = UDim2New(1, 0, 0, 25)
