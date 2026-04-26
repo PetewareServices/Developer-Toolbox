@@ -1,3 +1,23 @@
+--[[
+PLEASE READ - IMPORTANT
+
+(C) 2026 Peteware
+This project is part of Developer-Toolbox, an open-sourced debugging tool for roblox.
+
+Licensed under the MIT License.  
+See the full license at:  
+https://opensource.org/licenses/MIT
+
+**Attribution required:** You must give proper credit to Peteware when using or redistributing this project or its derivatives.
+
+This software is provided "AS IS" without warranties of any kind.  
+Violations of license terms may result in legal action.
+
+Thank you for respecting the license and supporting open source software!
+
+Peteware Development Team
+]]
+
 --// Loading Handler
 if not game:IsLoaded() then
     game.Loaded:Wait()
