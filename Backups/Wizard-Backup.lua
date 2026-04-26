@@ -112,7 +112,7 @@ screen_gui.DisplayOrder = 10000
 local main_frame = InstanceNew("Frame")
 main_frame.Name = "Container"
 main_frame.Parent = screen_gui
-main_frame.BackgroundColor3 = Color3New(1, 1, 1)
+main_frame.BackgroundColor3 = Color3.new(1, 1, 1)
 main_frame.BackgroundTransparency = 1
 main_frame.Size = UDim2New(0, 100, 0, 100)
 
