@@ -1,9 +1,3 @@
---[[
-    This UI Library is a improved modified version of the Wizard Library specifically designed for the Developer Toolbox
-    Credits: Jake aka jake3232_ on discord for deobfuscating the UI Library and the Peteware Development Team for doing everything else.
-    Note: Because the original owner is such a dick and decided obfuscate a UI library, I refuse to give him credits because he made us go through this misery.
-]]
-
 --// Loading Handler
 if not game:IsLoaded() then
     game.Loaded:Wait()
