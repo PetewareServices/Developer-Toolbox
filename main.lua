@@ -24,16 +24,51 @@ if not game:IsLoaded() then
     task.wait()
 end
 
---// Settings Detection
-local Settings = ... or {
-    ["Owner"] = "Unknown",
-    ["Build"] = "Roblox",
-    ["Theme"] = "Default"
+--// Early Local References
+local Color3fromRGB = Color3.fromRGB
+
+local default_theme = {
+    WindowBg = Color3fromRGB(25, 25, 25), 
+    TopBar = Color3fromRGB(25, 25, 25),
+    Background = Color3fromRGB(35, 35, 35),
+    SectionHeader = Color3fromRGB(45, 45, 45),
+    SectionBg = Color3fromRGB(35, 35, 35),
+    Button = Color3fromRGB(65, 65, 65),
+    ToggleBar = Color3fromRGB(65, 65, 65),
+    Toggle = Color3fromRGB(255, 87, 87),
+    Text = Color3fromRGB(255, 255, 255)
 }
 
-local repo_owner = Settings["Owner"]
-local build = Settings["Build"]
-local theme = Settings["Theme"]
+--// Settings Detection
+local raw_setting_args = ...
+
+local Settings = raw_setting_args and type(raw_setting_args) == "table" and raw_setting_args or {
+    ["Owner"] = "Unknown",
+    ["Build"] = "Roblox",
+    ["Theme"] = "Default",
+    ["Colors"] = default_theme
+}
+
+local repo_owner = Settings["Owner"] or "Unknown"
+local build = Settings["Build"] or "Roblox"
+
+--// Theme Initialiser
+if Settings["Theme"] == "Peteware" then
+    Settings["Colors"] = {
+        WindowBg = Color3fromRGB(18, 18, 18),
+        TopBar = Color3fromRGB(18, 18, 18),
+        Background = Color3fromRGB(18, 18, 18),
+        SectionHeader = Color3fromRGB(45, 45, 45),
+        SectionBg = Color3fromRGB(28, 28, 28),
+        Button = Color3fromRGB(28, 28, 28),
+        ToggleBar = Color3fromRGB(22, 22, 22),
+        Toggle = Color3fromRGB(255, 140, 0),
+        Text = Color3fromRGB(235, 235, 235),
+    }
+else
+    Settings["Theme"] = "Default"
+    Settings["Colours"] = default_theme
+end
 
 --// Local References
 local game = game
@@ -48,6 +83,9 @@ local InstanceNew = Instance.new
 local task = task
 local taskwait = task.wait
 local taskdelay = task.delay
+local math = math
+local mathhuge = math.huge
+local mathfloor = math.floor
 local table = table
 local tablefind = table.find
 local tableconcat = table.concat
@@ -76,6 +114,7 @@ local pairs = pairs
 local ipairs = ipairs
 local print = print
 local tostring = tostring
+local tonumber = tonumber
 local warn = warn
 local setmetatable = setmetatable
 local rawset = rawset
@@ -242,7 +281,7 @@ if MainState.Supported == nil then
 
         GetService(game, "StarterGui"):SetCore("SendNotification", {
             Title = "Developer Toolbox",
-            Text = "Incompatible Exploit. Your exploit does not support the developer toolbox (missing " .. tostring(func_name) .. ")",
+            Text = "Incompatible Exploit. Your exploit does not support the developer toolbox (missing capabilties of RobloxPlace)",
             Icon = bell_ring,
             Duration = duration or 3.5
         })
@@ -326,8 +365,6 @@ for _, backup in pairs(backups) do
     end)
     
     if not success or not loaded_backup then
-        print("failed:", backup_name)
-        warn(loaded_backup)
         yielding = false
         return
     end
@@ -391,7 +428,7 @@ local fireproximityprompt = type(fireproximityprompt) == "function" and fireprox
         if index == 1 then
             proximity_prompt[property] = 0
         elseif index == 2 then
-            proximity_prompt[property] = math.huge
+            proximity_prompt[property] = mathhuge
         elseif index == 3 then
             proximity_prompt[property] = true
         else
@@ -434,6 +471,10 @@ local user_input_service = cloneref(GetService(game, "UserInputService"))
 local sound_service = cloneref(GetService(game, "SoundService"))
 local proximity_prompt_service = cloneref(GetService(game, "ProximityPromptService"))
 
+--// Optimisation Variables
+local JSONEncode = http_service.JSONEncode
+local JSONDecode = http_service.JSONDecode
+
 --// Data Handler
 if not isfolder(main_folder) then
     makefolder(main_folder)
@@ -466,14 +507,31 @@ end
 --// Notification Sender
 local notification_sound = InstanceNew("Sound", sound_service)
 notification_sound.Name = "PetewareNotification"
-notification_sound.SoundId = (customasset and bell_ring_mp3 and customasset(bell_ring_mp3)) or "rbxassetid://2502368191"
+
+local notify_ring_asset = "rbxassetid://250236819"
+
+local customasset_success, customasset_result = pcall(function()
+    return customasset(bell_ring_mp3)
+end)
+
+if customasset_success and customasset_result then
+    notify_ring_asset = customasset_result
+end
+
+notification_sound.SoundId = notify_ring_asset
 notification_sound.Volume = 1
 notification_sound.Archivable = false
-    
-notification_sound.Loaded:Wait()
 
 local notification_sounds = true
-local bell_ring_asset = (customasset and bell_ring_png and customasset(bell_ring_png)) or "rbxassetid://108052242103510"
+local bell_ring_asset = "rbxassetid://108052242103510"
+
+customasset_success, customasset_result = pcall(function()
+    return customasset(bell_ring_png)
+end)
+
+if customasset_success and customasset_result then
+    bell_ring_asset = customasset_result
+end
 
 local function Notify(text, duration)
     if notification_sound and notification_sounds then
@@ -604,12 +662,12 @@ local found_any_servers = ""
 local actual_hour = osdate("!*t").hour
 
 if isfile(server_hop_data) then
-    server_ids = http_service:JSONDecode(readfile(server_hop_data))
+    server_ids = JSONDecode(http_service, readfile(server_hop_data))
 end
 
 if type(server_ids) ~= "table" or #server_ids == 0 then
     server_ids = { actual_hour }
-    writefile(server_hop_data, http_service:JSONEncode(server_ids))
+    writefile(server_hop_data, JSONEncode(http_service, server_ids))
 end
 
 local function AttemptServerHop()
@@ -620,7 +678,7 @@ local function AttemptServerHop()
     end
 
     local success, site = pcall(function()
-        return http_service:JSONDecode(HttpGet(game, url))
+        return JSONDecode(http_service, HttpGet(game, url))
     end)
 
     if not success or not site or not site.data then
@@ -653,7 +711,7 @@ local function AttemptServerHop()
 
             if can_server_hop then
                 server_ids[#server_ids + 1] = server_id
-                writefile(server_hop_data, http_service:JSONEncode(server_ids))
+                writefile(server_hop_data, JSONEncode(http_service, server_ids))
                 teleport_service:TeleportToPlaceInstance(PlaceId, server_id)
                 taskwait(4)
                 return
@@ -773,6 +831,27 @@ local function RemoveFromTable(tbl, value)
 end
 
 local addon_list = FetchAddonList()
+
+--// Configuration Handler
+local config_folder = toolbox_folder .. "/Config"
+local config_file = config_folder .. "/settings.json"
+
+if not isfolder(config_folder) then
+    makefolder(config_folder)
+end
+
+local saved_config = {}
+
+if isfile(config_file) then
+    local raw = tonumber(readfile(config_file)) or 0
+    saved_config["NotificationSounds"] = (raw % 2) == 1
+    saved_config["InstantPrompts"] = (mathfloor(raw / 2) % 2) == 1
+end
+
+local function SaveConfig(key, value)
+    saved_config[key] = value
+    writefile(config_file, tostring((saved_config["NotificationSounds"] and 1 or 0) + (saved_config["InstantPrompts"] and 2 or 0)))
+end
 
 --// Instant Proximity Prompts
 local proximity_prompt_conn
@@ -905,7 +984,7 @@ local function FetchExecutorInfo()
 end
 
 --// Main UI
-local WizardLibrary = CachedData["Wizard"](theme)
+local WizardLibrary = CachedData["Wizard"](Settings)
 
 local LibraryObject = WizardLibrary.Object
 
@@ -1084,6 +1163,7 @@ local Other = DeveloperToolbox:NewSection("Other")
 Notify = function() end
 
 Other:CreateToggle("Instant Prompts", function(value)
+    SaveConfig("InstantPrompts", value)
     if value then
         proximity_prompt_conn = proximity_prompt_service.PromptButtonHoldBegan:Connect(function(prompt)
             if prompt.HoldDuration > 0 then
@@ -1095,20 +1175,19 @@ Other:CreateToggle("Instant Prompts", function(value)
         if typeof(proximity_prompt_conn) == "RBXScriptConnection" then
             proximity_prompt_conn:Disconnect()
         end
-
         Notify("Instant Proximity Prompt Disabled. You are now unable to interact with Proximity Prompts instantly.")
     end
-end)
+end, saved_config["InstantPrompts"] or false)
 
 Other:CreateToggle("Notification Sounds", function(value)
     notification_sounds = value
-    
+    SaveConfig("NotificationSounds", value)
     if notification_sounds then
         Notify("Notification Sounds Enabled.")
     else
         Notify("Notification Sounds Disabled.")
     end
-end, true)
+end, saved_config["NotificationSounds"] ~= nil and saved_config["NotificationSounds"] or true)
 
 Notify = OldNotify
 
