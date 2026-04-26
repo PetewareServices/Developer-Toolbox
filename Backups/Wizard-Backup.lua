@@ -25,7 +25,9 @@ if not game:IsLoaded() then
 end
 
 --// Settings Detection
-local Settings = ... and type(...) == "table" and ... or {
+local raw_args = ...
+
+local Settings = raw_args and type(raw_args) == "table" and raw_args or {
     ["Build"] = "Roblox",
     ["Theme"] = "Default",
     ["Colors"] = {
