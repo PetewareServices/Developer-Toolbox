@@ -25,6 +25,8 @@ if not game:IsLoaded() then
 end
 
 --// Early Local References
+local Color3 = Color3
+local Color3New = Color3.new
 local Color3fromRGB = Color3.fromRGB
 
 local default_theme = {
